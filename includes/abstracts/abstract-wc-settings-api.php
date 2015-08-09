@@ -262,7 +262,35 @@ abstract class WC_Settings_API {
 
 		return $tip ? '<img class="help_tip" data-tip="' . wc_sanitize_tooltip( $tip ) . '" src="' . WC()->plugin_url() . '/assets/images/help.png" height="16" width="16" />' : '';
 	}
-
+	
+    /**
+     * Generate wp_editor HTML
+     *
+     * @param $key
+     * @param $data
+     * @return string
+     */
+    public function generate_editor_html($key, $data) {
+        $field    = $this->plugin_id . $this->id . '_' . $key;
+        ob_start();
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <label for="<?php echo esc_attr( $field ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>
+                <?php echo $this->get_tooltip_html( $data ); ?>
+            </th>
+            <td class="forminp">
+                <fieldset>
+                    <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+                    <?php wp_editor($this->get_option( $key ), $field); ?>
+                    <?php echo $this->get_description_html( $data ); ?>
+                </fieldset>
+            </td>
+        </tr>
+        <?php
+        return ob_get_clean();
+    }
+    
 	/**
 	 * Get HTML for descriptions
 	 *
